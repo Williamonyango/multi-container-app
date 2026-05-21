@@ -3,8 +3,8 @@ name: Deploy MultiDocker
 on:
   push:
     branches:
-      - main
-  workflow_dispatch:
+      - master
+  
 
 jobs:
   deploy:
