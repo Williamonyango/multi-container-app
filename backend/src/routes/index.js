@@ -28,34 +28,5 @@ router.use('/audit-logs', auditlogRoutes)
 router.use('/feedback', feedbackRoutes)
 
 export default router
-// ```
 
-// ---
 
-// ### Test in Postman
-
-// **Get all users**
-// ```
-// GET http://localhost:5000/api/v1/users
-// Authorization: Bearer <token>
-// ```
-
-// **Create a new field staff — admin only**
-// ```
-// POST http://localhost:5000/api/v1/auth/register
-// Authorization: Bearer <token>
-// Content-Type: application/json
-
-// {
-//   "full_name": "New Field Staff",
-//   "phone": "+254700000001",
-//   "email": "fieldstaff@puretap.co.ke",
-//   "password": "Staff@1234",
-//   "role": "field_staff"
-// }
-// ```
-
-// **Deactivate a user**
-// ```
-// PATCH http://localhost:5000/api/v1/users/11/deactivate
-// Authorization: Bearer <token>
