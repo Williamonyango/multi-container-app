@@ -17,22 +17,22 @@ jobs:
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build admin image
-        run: docker build -t nyandiga/multi-admin ./admin
+        run: docker build -t multi-admin ./admin
 
       - name: Build backend image
-        run: docker build -t nyandiga/multi-backend ./backend
+        run: docker build -t multi-backend ./backend
 
       - name: Build nginx image
-        run: docker build -t nyandiga/multi-nginx ./ngnix
+        run: docker build -t multi-nginx ./ngnix
 
       - name: Push admin image
-        run: docker push nyandiga/multi-admin
+        run: docker push multi-admin
 
       - name: Push backend image
-        run: docker push nyandiga/multi-backend
+        run: docker push multi-backend
 
       - name: Push nginx image
-        run: docker push nyandiga/multi-nginx
+        run: docker push multi-nginx
 
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
