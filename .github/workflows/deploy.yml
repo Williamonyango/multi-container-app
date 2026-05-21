@@ -1,0 +1,50 @@
+name: Deploy MultiDocker
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build admin image
+        run: docker build -t nyandiga/multi-admin ./admin
+
+      - name: Build backend image
+        run: docker build -t nyandiga/multi-backend ./backend
+
+      - name: Build nginx image
+        run: docker build -t nyandiga/multi-nginx ./ngnix
+
+      - name: Push admin image
+        run: docker push nyandiga/multi-admin
+
+      - name: Push backend image
+        run: docker push nyandiga/multi-backend
+
+      - name: Push nginx image
+        run: docker push nyandiga/multi-nginx
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v18
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          application_name: multi-docker
+          environment_name: Multi-docker-env
+          existing_bucket_name: elasticbeanstalk-us-east-1-923445559289
+          region: us-east-1
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip
