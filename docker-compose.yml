@@ -1,40 +1,40 @@
-
 services:
+  frontend-admin:
+    image: "nyandiga/multi-admin"
+    mem_limit: 128m
+    hostname: frontend-admin
+
+  backend:
+    image: "nyandiga/multi-backend"
+    mem_limit: 128m
+    hostname: backend
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - MAIL_FROM=${MAIL_FROM}
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USER=${MAIL_USER}
+      - MAIL_PASS=${MAIL_PASS}
+      - MPESA_CONSUMER_KEY=${MPESA_CONSUMER_KEY}
+      - MPESA_CONSUMER_SECRET=${MPESA_CONSUMER_SECRET}
+      - MPESA_SHORTCODE=${MPESA_SHORTCODE}
+      - MPESA_PASSKEY=${MPESA_PASSKEY}
+      - MPESA_CALLBACK_URL=${MPESA_CALLBACK_URL}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - APP_URL=${APP_URL}
+
   nginx:
-    restart: always
-    build:
-      context: ./ngnix
-      dockerfile: Dockerfile.dev
+    image: "nyandiga/multi-nginx"
+    mem_limit: 128m
+    hostname: nginx
     ports:
-      - "8000:80"
+      - "80:80"
     depends_on:
       - backend
       - frontend-admin
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
-    ports:
-      - "5000:5000"
-    env_file:
-      - ./backend/.env
-    volumes:
-      - /app/node_modules
-      - ./backend:/app
-    environment:
-
-      - NODE_ENV=development
-
-  frontend-admin:
-    build:
-      context: ./admin
-      dockerfile: Dockerfile.dev
-    env_file:
-      - ./admin/.env
-    volumes:
-      - /app/node_modules
-      - ./admin:/app
-    ports:
-      - "3000:5173"
-    environment:
-      - NODE_ENV=development

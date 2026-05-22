@@ -1,0 +1,40 @@
+
+services:
+  nginx:
+    restart: always
+    build:
+      context: ./ngnix
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:80"
+    depends_on:
+      - backend
+      - frontend-admin
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    volumes:
+      - /app/node_modules
+      - ./backend:/app
+    environment:
+
+      - NODE_ENV=development
+
+  frontend-admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile.dev
+    env_file:
+      - ./admin/.env
+    volumes:
+      - /app/node_modules
+      - ./admin:/app
+    ports:
+      - "3000:5173"
+    environment:
+      - NODE_ENV=development
